@@ -17,6 +17,14 @@ idadesnaoobesos = df[df['NObeyesdad'] == 0]['Age']
 
 # # # # # # # # # # # # # # # graficos # # # # # # # # # # # # # # #
 plt.figure(figsize=(10, 6))
+plt.scatter(df['Age'], df['CH2O'], alpha=0.5)
+plt.title('Idade vs Consumo de Água')
+plt.xlabel('Idade')
+plt.ylabel('Consumo de Água')
+plt.grid(True)
+plt.show()
+
+plt.figure(figsize=(10, 6))
 plt.hist([obesos['Age'], normais['Age']], bins=10, alpha=0.7, label=['Obesos', 'Não Obesos'])
 plt.title('Histograma de Idades para Obesos e Não Obesos')
 plt.xlabel('Idade')
