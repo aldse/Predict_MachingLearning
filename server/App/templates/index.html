@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Predição de Obesidade</title>
+    <style>
+      :root {
+        --bg-color: #f8f6e3;
+        --rect-color: #97e7e1;
+        --title-color: #6ad4dd;
+        --conteudo-color: #7aa2e3;
+        --input-bg-color: #ffffff;
+        --button-bg-color: #6ad4dd;
+        --button-text-color: #ffffff;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .centered-div {
+        background-color: var(--rect-color);
+        width: 90%;
+        height: 90%;
+        display: grid;
+        place-items: center;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0px 0px 0px 2px var(--conteudo-color);
+        border-radius: 10px;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        padding: 20px;
+      }
+
+      .title {
+        color: var(--conteudo-color);
+        font-size: 40px;
+        position: absolute;
+        top: 7%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        box-shadow: 0px 0px 0px 2px var(--title-color);
+        padding: 10px;
+      }
+
+      .input-group {
+        margin-top: 4px;
+        width: 20%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .input-group label {
+        margin-bottom: 5px;
+        color: var(--conteudo-color);
+        font-size: 25px;
+        font-weight: bold;
+      }
+
+      .input-group select,
+      .input-group input {
+        margin-bottom: 10px;
+        padding: 15px;
+        font-size: 16px;
+        border: 2px solid var(--title-color);
+        border-radius: 8px;
+        background-color: var(--input-bg-color);
+        transition: border-color 0.3s ease;
+        color: #6ad4dd;
+      }
+
+      .input-group select:focus,
+      .input-group input:focus {
+        outline: none;
+        border-color: #7aa2e3;
+        color: #6ad4dd;
+      }
+
+      .input-group input::placeholder {
+        color: #cccccc;
+      }
+
+      .button {
+        margin-top: 20px;
+        padding: 15px 30px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        background-color: var(--button-bg-color);
+        color: var(--button-text-color);
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: #5aa7cb;
+        color: #97e7e1;
+      }
+
+      .ajuste {
+        height: 55%;
+        display: ruby;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="title">PredictObesity: Antecipando sua Saúde com Precisão</h1>
+    <div class="centered-div">
+      <form class="ajuste" action="/home/result" method="POST">
+        <div class="input-group">
+          <label for="genero">Gênero:</label>
+          <select id="genero" name="genero">
+            <option value="0">Feminino</option>
+            <option value="1">Masculino</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="age">Idade:</label>
+          <input
+            type="number"
+            id="age"
+            name="age"
+            placeholder="Digite sua idade"
+          />
+        </div>
+
+        <div class="input-group">
+          <label for="familiar">Histórico familiar de obesidade:</label>
+          <select id="familiar" name="familiar">
+            <option value="0">Não tenho</option>
+            <option value="1">Tenho</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="teorcalorico"
+            >Come alimentos com alto teor calórico com frequência:</label
+          >
+          <select id="teorcalorico" name="teorcalorico">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="vegetais">Come vegetais nas refeições:</label>
+          <select id="vegetais" name="vegetais">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="quantasrefeicoes">Quantas refeições principais diárias:</label>
+          <select id="quantasrefeicoes" name="quantasrefeicoes">
+            <option value="0">1-2 refeições</option>
+            <option value="1">3 refeições</option>
+            <option value="2">Mais de 3 refeições</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="entreasrefeicoes"
+            >Quantidade de comida entre as refeições:</label
+          >
+          <select id="entreasrefeicoes" name="entreasrefeicoes">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="fumo">Fuma:</label>
+          <select id="fumo" name="fumo">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="agua">Quantidade de água que você bebe, em uma escala de 0 a 2:</label>
+          <select id="agua" name="agua">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="ingestaocalorica">Você monitora sua ingestão calórica:</label>
+          <select id="ingestaocalorica" name="ingestaocalorica">
+            <option value="0">Não</option>
+            <option value="1">Sim</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="atividadefisica">Prática atividade física, em uma escala de 0 a 3:</label>
+          <select id="atividadefisica" name="atividadefisica">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="telefonetempo"
+            >Quanto tempo você passa olhando para dispositivos com telas, em uma escala de 0 a 2:</label
+          >
+          <select id="telefonetempo" name="telefonetempo">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="bebe">Qual sua frequência de consumo de álcool:</label>
+          <select id="bebe" name="bebe">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="automovel">Automóvel:</label>
+          <select id="automovel" name="automovel">
+            <option value="1">Principal meio de transporte</option>
+            <option value="0">Outro meio de transporte</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="bicicleta">Bicicleta:</label>
+          <select id="bicicleta" name="bicicleta">
+            <option value="1">Principal meio de transporte</option>
+            <option value="0">Outro meio de transporte</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="moto">Moto:</label>
+          <select id="moto" name="moto">
+            <option value="1">Principal meio de transporte</option>
+            <option value="0">Outro meio de transporte</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="urbs">Transporte Público:</label>
+          <select id="urbs" name="urbs">
+            <option value="1">Principal meio de transporte</option>
+            <option value="0">Outro meio de transporte</option>
+          </select>
+        </div>
+
+        <div class="input-group">
+          <label for="caminhando">Caminhada:</label>
+          <select id="caminhando" name="caminhando">
+            <option value="1">Principal meio de transporte</option>
+            <option value="0">Outro meio de transporte</option>
+          </select>
+        </div>
+
+        <button class="button" id="submit" value="Submit" type="submit">
+          Ver Predição
+        </button>
+      </form>
+    </div>
+    <script></script>
+  </body>
+</html>

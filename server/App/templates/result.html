@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Resultado da Predição</title>
+    <style>
+      :root {
+        --bg-color: #f8f6e3;
+        --rect-color: #97e7e1;
+        --title-color: #6ad4dd;
+        --conteudo-color: #7aa2e3;
+        --input-bg-color: #ffffff;
+        --button-bg-color: #6ad4dd;
+        --button-text-color: #ffffff;
+      }
+
+      body {
+        background-color: var(--bg-color);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      .centered-div {
+        background-color: var(--rect-color);
+        width: 90%;
+        height: 80%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        z-index: 1;
+        box-shadow: 0px 0px 0px 2px var(--conteudo-color);
+        border-radius: 10px;
+      }
+
+      .title {
+        color: var(--conteudo-color);
+        font-size: 80px;
+        position: absolute;
+        top: 13%;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 2;
+        box-shadow: 0px 0px 0px 2px var(--title-color);
+        padding: 10px;
+      }
+
+      .h1 {
+        font-size: 60px; 
+        color: var(--conteudo-color); 
+        text-align: center; 
+        margin-top: 50px; 
+        margin-bottom: 30px; 
+        text-shadow: 3px 3px 5px var(--title-color); 
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="title">Resultado da Predição</h1>
+    <div class="centered-div">
+      <p class="h1">Resultado da Predição: {{ model }}</p>
+    </div>
+  </body>
+</html>
