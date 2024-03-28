@@ -1,89 +1,67 @@
-from sklearn.svm import SVR
-from sklearn.pipeline import make_pipeline, Pipeline
-from sklearn.preprocessing import StandardScaler, normalize, LabelEncoder
-import numpy as np
 import matplotlib.pyplot as plt
-from joblib import dump, load
-from sklearn.decomposition import PCA
-from sklearn.linear_model import ElasticNet, LinearRegression
-from sklearn.metrics import mean_absolute_error, r2_score, accuracy_score
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
-from sklearn.ensemble import HistGradientBoostingClassifier, RandomForestClassifier, RandomForestRegressor
-from sklearn.datasets import make_hastie_10_2, make_classification
+from joblib import dump
+from sklearn.metrics import  accuracy_score
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
-import plotly.express as px
 
 ##Data Cleaning##
 df = pd.read_csv('obesity.csv', encoding = "ISO-8859-1")
 df.dropna()
 
-# fumambebem = df[(df['SMOKE'] == 1) & (df['CALC'] > 0 ) & (df['family_history_with_overweight'] == 1 )]
-
-fumambebem = df #df[(df['SMOKE'] == 1) & (df['CALC'] > 0 ) & (df['family_history_with_overweight'] == 1) & (df['FAVC'] == 1) & (df['FCVC'] == 0) & (df['NCP'] == 2) & (df['CAEC'] >= 2)]
-print(df)
-
-normaisfumambebem = df[(df['NObeyesdad'] == 0) & (df['SMOKE'] == 1) & (df['CALC'] > 0 )]
-
-normaisfumam = df[(df['NObeyesdad'] == 0) & (df['SMOKE'] == 1)]
-
+fumambebem = df 
 normais = df[df['NObeyesdad'] == 0]
-
-obesosfumambebem = df[(df['NObeyesdad'] == 1) & (df['SMOKE'] == 1) & (df['CALC'] > 0 )]
-
-obesosfumam = df[(df['NObeyesdad'] == 1) & (df['SMOKE'] == 1)]
-
 obesos = df[df['NObeyesdad'] == 1]
+idadesobesos = df[df['NObeyesdad'] == 1]['Age']
+idadesnaoobesos = df[df['NObeyesdad'] == 0]['Age']
 
-df.head()
-
-# print(len(obesosfumambebem))
-# print(len(normaisfumambebem))
-
-
-##Boxplots##
-# Criar um boxplot das idades apenas para os obesos
-plt.figure(figsize=(8, 6))
-obesos.boxplot(column='Age')
-plt.title('Boxplot de Idades para Obesos')
-plt.ylabel('Idade')
-plt.xlabel('Obesos')
-
+# # # # # # # # # # # # # # # graficos # # # # # # # # # # # # # # #
+plt.figure(figsize=(10, 6))
+plt.hist([obesos['Age'], normais['Age']], bins=10, alpha=0.7, label=['Obesos', 'Não Obesos'])
+plt.title('Histograma de Idades para Obesos e Não Obesos')
+plt.xlabel('Idade')
+plt.ylabel('Frequência')
+plt.legend()
 plt.show()
 
-# Criar um boxplot das idades apenas para os normais
-plt.figure(figsize=(8, 6))
-normais.boxplot(column='Age')
-plt.title('Boxplot de Idades para Normais')
+plt.figure(figsize=(10, 6))
+plt.boxplot([idadesobesos, idadesnaoobesos], labels=['Obesos', 'Não Obesos'])
+plt.title('Boxplot de Idades para Obesos e Não Obesos')
 plt.ylabel('Idade')
-plt.xlabel('Normais')
-
+plt.xlabel('Categoria')
 plt.show()
 
+plt.figure(figsize=(10, 6))
+plt.hist(df['Age'], bins=20, color='skyblue', edgecolor='black', alpha=0.7)
+plt.title('Distribuição de Idades')
+plt.xlabel('Idade')
+plt.ylabel('Frequência')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
 
-##Scatter Plot
-obesos = df[df['NObeyesdad'] == 1]
-nao_obesos = df[df['NObeyesdad'] == 0]
+plt.figure(figsize=(8, 8))
+sizes = df['NObeyesdad'].value_counts()
+labels = ['Não Obeso', 'Obeso']
+colors = ['lightcoral', 'lightskyblue']
+explode = (0, 0.1)
+plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, startangle=140)
+plt.title('Distribuição de Obesidade')
+plt.show()
 
-fig = px.scatter()
-fig.add_scatter(x=[1]*len(obesos), y=obesos['Age'], mode='markers', name='Obesos')
-fig.add_scatter(x=[0]*len(nao_obesos), y=nao_obesos['Age'], mode='markers', name='Não Obesos')
+plt.figure(figsize=(10, 6))
+plt.hist(df['family_history_with_overweight'], bins=3, color='lightgreen', edgecolor='black', alpha=0.7)
+plt.title('Distribuição de Histórico Familiar de Sobrepeso')
+plt.xlabel('Histórico Familiar de Sobrepeso (1 = Sim, 0 = Não)')
+plt.ylabel('Frequência')
+plt.grid(axis='y', linestyle='--', alpha=0.7)
+plt.show()
 
-fig.update_layout(title='Idade dos Obesos vs Não Obesos',
-                  xaxis_title='Idade',
-                  yaxis_title='fumambebem (1=Obeso, 0=Não Obeso)',
-                  width=800)
-
-fig.show()
-
-
-##Treinamento e Validação Classificação##
+# # Treinamento e Validação Classificação # #
 Y = (fumambebem['NObeyesdad'] == 1)  
 X = fumambebem.drop('NObeyesdad', axis=1) 
 
 
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
-#20 47 : 0.84 | 0.42857142857142855
-#10 55 : 0.8214285714285714 | 0.5
 model = RandomForestClassifier(max_depth=100, random_state=42)
 model.fit(X_train, Y_train)
 
@@ -96,10 +74,10 @@ print()
 print('##Treinamento e Validação Classificação##')
 print("Precisão no treinamento:", train_accuracy)
 print("Precisão no teste:", test_accuracy)
+print()
 
 
-
-##Decision Tree no ScikitLearn Classificação##
+# # Decision Tree no ScikitLearn Classificação # #
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.metrics import accuracy_score
 
@@ -115,13 +93,32 @@ print()
 print('##Decision Tree no ScikitLearn Classificação##')
 print("Acurácia no treinamento:", train_accuracy)
 print("Acurácia no teste:", test_accuracy)
+print()
 
-
-exemplo_pessoa = pd.DataFrame({'Gender': [1], 'Age': [3], 'family_history_with_overweight': [1], 'FAVC': [1], 'FCVC': [1], 'NCP': [1], 'CAEC': [1], 'SMOKE': [0], 
-                               'CH2O': [0], 'SCC': [0], 'FAF': [0], 'TUE': [0], 'CALC': [1], 'Automobile': [1], 'Bike': [1], 'Motorbike': [1], 
-                               'Public_Transportation': [1], 'Walking': [1]})
+exemplo_pessoa = pd.DataFrame({'Gender': [1], 
+                               'Age': [3], 
+                               'family_history_with_overweight': [1], 
+                               'FAVC': [1], 
+                               'FCVC': [1], 
+                               'NCP': [1], 
+                               'CAEC': [1], 
+                               'SMOKE': [0], 
+                               'CH2O': [0], 
+                               'SCC': [0], 
+                               'FAF': [0], 
+                               'TUE': [0], 
+                               'CALC': [1], 
+                               'Automobile': [1], 
+                               'Bike': [1], 
+                               'Motorbike': [1], 
+                               'Public_Transportation': [1], 
+                               'Walking': [1]
+                               })
 
 obeso = model.predict(exemplo_pessoa)
-print("Previsão para a pessoa:", obeso)
-# salva o modelo treinado para uso posterior
+
+print()
+print("Previsão para a pessoa: (True: OBESO | False: NÃO OBESO)", obeso)
+print()
+
 dump(model, 'desafio.joblib')
